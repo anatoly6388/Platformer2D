@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
     private bool _isLive = false;
     private Enemy _enemy;
 
-    void Start()
+    private void Start()
     {
         _wait=new WaitForSeconds(_delay);
         StartCoroutine(Spawn());

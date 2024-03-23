@@ -1,8 +1,12 @@
 
 using UnityEngine;
 
+[RequireComponent (typeof(Animator))]
+
 public class AreaPatrol : MonoBehaviour
 {
+    readonly private string _isRun = "isRun";
+
     private Transform _wayPoint;
     private Transform[] _wayPoints;
     private Player _player;
@@ -17,13 +21,7 @@ public class AreaPatrol : MonoBehaviour
     private bool _isLeft = false;
     private bool _isVisible = false;
     private bool _isAttack = false;
-
-
-    public void SetPlayer(Player player, Transform wayPoint)
-    {
-        _player = player;
-        _wayPoint = wayPoint;
-    }
+    private float _checkPoint = 0.2f;
 
     private void Start()
     {
@@ -54,7 +52,7 @@ public class AreaPatrol : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, _wayPoints[_targetpoint].position, _speed * Time.deltaTime);
             Animate(true);
 
-            if (Vector2.Distance(transform.position, _wayPoints[_targetpoint].position) < 0.2f )
+            if (Vector2.Distance(transform.position, _wayPoints[_targetpoint].position) < _checkPoint)
             {
                 if (_waitTime <= 0)
                 {
@@ -69,9 +67,15 @@ public class AreaPatrol : MonoBehaviour
         }
     }
 
+    public void SetPlayer(Player player, Transform wayPoint)
+    {
+        _player = player;
+        _wayPoint = wayPoint;
+    }
+
     private void Animate(bool isRun)
     {
-        _animator.SetBool("isRun", isRun);
+        _animator.SetBool(_isRun, isRun);
     }
 
     private void TrackTarget(Transform target)

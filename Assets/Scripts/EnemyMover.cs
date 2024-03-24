@@ -3,9 +3,9 @@ using UnityEngine;
 
 [RequireComponent (typeof(Animator))]
 
-public class AreaPatrol : MonoBehaviour
+public class EnemyMover : MonoBehaviour
 {
-    readonly private string _isRun = "isRun";
+    public readonly int isRun = Animator.StringToHash(nameof(isRun));
 
     private Transform _wayPoint;
     private Transform[] _wayPoints;
@@ -73,9 +73,9 @@ public class AreaPatrol : MonoBehaviour
         _wayPoint = wayPoint;
     }
 
-    private void Animate(bool isRun)
+    private void Animate(bool IsRun)
     {
-        _animator.SetBool(_isRun, isRun);
+        _animator.SetBool(isRun, IsRun);
     }
 
     private void TrackTarget(Transform target)

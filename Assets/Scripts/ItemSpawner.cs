@@ -10,7 +10,6 @@ public class ItemSpawner : MonoBehaviour
 
     private Transform[] _spawnPoints;
     private int _items = 0;
-
     private int _itemVarieble = 4;
 
     private void Start()

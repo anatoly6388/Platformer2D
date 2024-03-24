@@ -1,8 +1,11 @@
-using System;
+
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class Enemy : MonoBehaviour
 {
+    public readonly int Death = Animator.StringToHash(nameof(Death));
+
     private float _maxHealth = 50f;
     private float _currentHealth;
     private Animator _animator;
@@ -25,7 +28,7 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        _animator.SetTrigger("Death");
+        _animator.SetTrigger(Death);
         Destroy(gameObject);
     }
 }

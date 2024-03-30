@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
+    public readonly int Attack = Animator.StringToHash(nameof(Attack));
+
     [SerializeField] private LayerMask _enemyLayers;
     [SerializeField] private Transform _attackPoint;
 
@@ -19,18 +21,18 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Attack();
+            Fight();
         }
     }
 
-    private void Attack()
+    private void Fight()
     {
-        _animator.SetTrigger("Attack");
+        _animator.SetTrigger(Attack);
         Collider2D[] enemys = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
 
         foreach (Collider2D enemy in enemys)
         {
-            enemy.GetComponent<Enemy>().TakeDamage(_attackPower);
+            enemy.GetComponent<Health>().TakeDamage(_attackPower);
         }
     }
 }

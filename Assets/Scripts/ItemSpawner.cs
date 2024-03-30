@@ -10,7 +10,8 @@ public class ItemSpawner : MonoBehaviour
 
     private Transform[] _spawnPoints;
     private int _items = 0;
-    private int _itemVarieble = 4;
+    private int _chanceSpawnHeart = 20;
+    private int _percent = 100;
 
     private void Start()
     {
@@ -20,6 +21,8 @@ public class ItemSpawner : MonoBehaviour
         {
             _spawnPoints[i]= _itemSpawnPoints.GetChild(i).transform;
         }
+
+        SpawnItem();
     }
     private void OnEnable()
     {
@@ -36,11 +39,8 @@ public class ItemSpawner : MonoBehaviour
     private void TakeItem()
     {
         _items--;
-    }
 
-    private void Update()
-    {
-        if (_items==0)
+        if (_items == 0)
             SpawnItem();
     }
 
@@ -48,9 +48,9 @@ public class ItemSpawner : MonoBehaviour
     {
         for (int i = 0; i < _spawnPoints.Length; i++)
         {
-            int index = Random.Range(0, _itemVarieble);
+            int index = Random.Range(0, _percent);
 
-            if (index == 0)
+            if (index <= _chanceSpawnHeart)
                 Instantiate(_hearthPrefab, _spawnPoints[i].position, _spawnPoints[i].rotation);
             else
                 Instantiate(_goldPrefab, _spawnPoints[i].position, _spawnPoints[i].rotation);

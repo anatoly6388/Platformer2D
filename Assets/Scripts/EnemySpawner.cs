@@ -4,13 +4,14 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private EnemyMover _prefab;
-    [SerializeField] private Player _player;
     [SerializeField] Transform _wayPoint;
-    
+    [SerializeField] private GoldCounter _counter;
+
+    private Health _health;
+    private float _maxHealth = 80f;
     private float _delay = 10f;
     private WaitForSeconds _wait;
-    private bool _isLive = false;
-    private Enemy _enemy;
+    private bool _isDeath = true;
 
     private void Start()
     {
@@ -22,14 +23,17 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            _isLive = (_enemy != null);
+            _isDeath = _health == null;
 
-            if (_isLive==false)
+            if (_isDeath)
             {
-                _isLive = true;
+                _isDeath = false;
                 EnemyMover enemy = Instantiate(_prefab, transform.position, Quaternion.identity);
-                enemy.SetPlayer(_player, _wayPoint);
-                _enemy=enemy.GetComponent<Enemy>();
+                enemy.SetWaypoint(_wayPoint);
+                _health = enemy.GetComponent<Health>();
+                _health.SetGoldCounter(_counter);
+                _health.SetMaxHealth(_maxHealth);
+                _counter.UpdateEnemyHealth(_health.CurrentHealth);
             }
 
             yield return _wait;

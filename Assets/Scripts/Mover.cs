@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
+    private readonly string Horizontal = "Horizontal";
+    public readonly int isJump = Animator.StringToHash(nameof(isJump));
+    public readonly int direction = Animator.StringToHash(nameof(direction));
+
     [SerializeField] private float _speed;
     [SerializeField] private float _JumpForce;
     [SerializeField] private float _checkGroundY;
@@ -15,6 +19,7 @@ public class Mover : MonoBehaviour
     private int _rotateY = -1;
     private bool _isGrounded = false;
     private Animator _animator;
+    private bool _isJump = false;
 
     private void Start()
     {
@@ -27,9 +32,9 @@ public class Mover : MonoBehaviour
         CheckGround();
 
         if(Input.GetKeyDown(KeyCode.Space) && _isGrounded)
-            _rigidbody.AddForce(transform.up * _JumpForce, ForceMode2D.Impulse);
+            _isJump = true;
 
-        _direction = Input.GetAxis("Horizontal");
+        _direction = Input.GetAxis(Horizontal);
         Animate();
 
         if (_direction > 0 && _isRight == false)
@@ -43,6 +48,12 @@ public class Mover : MonoBehaviour
     {
         Vector2 move = new Vector2(_direction * _speed, _rigidbody.velocity.y);
         _rigidbody.velocity = move;
+
+        if(_isJump)
+        {
+            _rigidbody.AddForce(transform.up * _JumpForce, ForceMode2D.Impulse);
+            _isJump = false;
+        }
     }
 
     private void Flip()
@@ -64,12 +75,12 @@ public class Mover : MonoBehaviour
     }
     private void Animate()
     {
-        _animator.SetFloat("_direction", math.abs(_direction));
+        _animator.SetFloat(direction, math.abs(_direction));
 
         if (_isGrounded == false)
-            _animator.SetBool("_isJump", true);
+            _animator.SetBool(isJump, true);
 
         if (_isGrounded)
-            _animator.SetBool("_isJump", false);
+            _animator.SetBool(isJump, false);
     }
 }

@@ -27,7 +27,7 @@ public class EnemyAttacker : MonoBehaviour
 
         foreach (Collider2D player in players)
         {
-            player.GetComponent<PlayerHealth>().TakeDamage(_attackPower);
+            player.GetComponent<Health>().TakeDamage(_attackPower);
             _animator.SetTrigger(Attack);
         }
     }

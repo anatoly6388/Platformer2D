@@ -3,47 +3,35 @@ using UnityEngine.UI;
 
 public class GoldCounter : MonoBehaviour
 {
-    [SerializeField] private Player _player;
     [SerializeField] private Text _textTotalGold;
     [SerializeField] private Text _textHealth;
+    [SerializeField] private Text _textEnemyHealth;
 
-    private int _TotalGold = 0;
-    private float _health = 0;
-
-    private void OnEnable()
-    {
-        _player.CollectGold += UpdateCount;
-    }
+    private int _totalGold = 0;
 
     private void Start()
     {
         TranslateToString();
     }
 
-    private void Update()
+    public void UpdateCount()
     {
-        _health=_player.GetComponent<PlayerHealth>().CurrentHealth;
-        _textHealth.text = _health.ToString();
+        _totalGold++;
+        TranslateToString();
     }
 
-    private void OnDisable()
+    public void UpdatePlayerHealth(float health)
     {
-        _player.CollectGold -= UpdateCount;
+        _textHealth.text = health.ToString();
     }
 
-    private void AddOneGold()
+    public void UpdateEnemyHealth(float health)
     {
-        _TotalGold++;
+        _textEnemyHealth.text = health.ToString();
     }
 
     private void TranslateToString()
     {
-        _textTotalGold.text = _TotalGold.ToString();
-    }
-
-    private void UpdateCount()
-    {
-        AddOneGold();
-        TranslateToString();
+        _textTotalGold.text = _totalGold.ToString();
     }
 }

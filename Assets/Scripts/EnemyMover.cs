@@ -9,19 +9,17 @@ public class EnemyMover : MonoBehaviour
 
     private Transform _wayPoint;
     private Transform[] _wayPoints;
-    private Player _player;
-    private float _maxVisible = 8f;
-    private float _attackDistance = 2f;
-    private float _distance;
+    private Transform _target;
     private float _speed = 3f;
     private int _targetpoint;
     private float _waitTime = 0f;
     private float _startWaitTime=2f;
     private Animator _animator;
     private bool _isLeft = false;
-    private bool _isVisible = false;
-    private bool _isAttack = false;
+    private bool _isFollow = false;
+    private bool _isPatrol = true;
     private float _checkPoint = 0.2f;
+    private float _rotate = 180f;
 
     private void Start()
     {
@@ -38,15 +36,13 @@ public class EnemyMover : MonoBehaviour
 
     private void Update()
     {
-        SawPlayer();
-
-        if (_isVisible && _isAttack==false)
+        if (_isFollow)
         {
-            TrackTarget(_player.transform);
-            transform.position = Vector2.MoveTowards(transform.position, _player.transform.position, _speed * Time.deltaTime);
+            TrackTarget(_target.transform);
+            transform.position = Vector2.MoveTowards(transform.position, _target.transform.position, _speed * Time.deltaTime);
             Animate(true);
         }
-        else if(_isAttack==false)
+        else if(_isPatrol)
         {
             TrackTarget(_wayPoints[_targetpoint]);
             transform.position = Vector3.MoveTowards(transform.position, _wayPoints[_targetpoint].position, _speed * Time.deltaTime);
@@ -67,10 +63,16 @@ public class EnemyMover : MonoBehaviour
         }
     }
 
-    public void SetPlayer(Player player, Transform wayPoint)
+    public void SetWaypoint(Transform wayPoint)
     {
-        _player = player;
         _wayPoint = wayPoint;
+    }
+
+    public void SetDirection(bool isFollow, bool isPatrol, Transform target)
+    {
+        _isFollow = isFollow;
+        _isPatrol = isPatrol;
+        _target = target;
     }
 
     private void Animate(bool IsRun)
@@ -89,8 +91,7 @@ public class EnemyMover : MonoBehaviour
     private void Flip()
     {
         _isLeft = !_isLeft;
-
-        transform.Rotate(0f, 180f, 0f);
+        transform.Rotate(0f, _rotate, 0f);
     }
 
     private void GetWayPoint()
@@ -98,28 +99,5 @@ public class EnemyMover : MonoBehaviour
         _targetpoint = Random.Range(0, _wayPoints.Length);
         TrackTarget(_wayPoints[_targetpoint]);
         _waitTime = _startWaitTime;
-    }
-
-    private void SawPlayer()
-    {
-        _distance = Vector2.Distance(transform.position, _player.transform.position);
-
-        if (_distance <= _attackDistance)
-            Attack();
-        else if (_distance <= _maxVisible)
-        {
-            _isVisible = true;
-            _isAttack = false;
-        }
-        else
-        {
-            _isVisible = false;
-            _isAttack = false;
-        }
-    }
-
-    private void Attack()
-    {
-        _isAttack = true;
     }
 }
